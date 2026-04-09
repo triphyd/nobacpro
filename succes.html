@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comandă plasată cu succes | detergenti-eco.ro</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="/images/logo.svg">
+  <style>
+    :root {
+      --blue: #1A56DB;
+      --blue-dark: #0F3A8A;
+      --blue-light: #EBF3FF;
+      --dark: #1A1A2E;
+      --gray: #6B7280;
+      --gray-light: #F3F4F6;
+      --white: #FFFFFF;
+      --green: #16a34a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--blue-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+      max-width: 520px;
+      width: 100%;
+      padding: 48px 40px;
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      background: #DCFCE7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+
+    .success-icon svg {
+      display: block;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 12px;
+    }
+
+    .order-id {
+      display: inline-block;
+      background: var(--blue-light);
+      color: var(--blue);
+      font-weight: 700;
+      font-size: 15px;
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 15px;
+      color: var(--gray);
+      margin-bottom: 16px;
+    }
+
+    .info-box {
+      background: var(--gray-light);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-align: left;
+      margin: 24px 0;
+    }
+
+    .info-box p {
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .info-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-box .dot {
+      color: var(--blue);
+      font-weight: 700;
+      margin-right: 6px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 14px 32px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      margin-top: 8px;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-back:hover {
+      background: var(--blue-dark);
+      transform: translateY(-1px);
+    }
+
+    .footer-note {
+      margin-top: 32px;
+      font-size: 13px;
+      color: var(--gray);
+      opacity: 0.7;
+    }
+
+    @media (max-width: 560px) {
+      .card { padding: 32px 24px; }
+      h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="success-icon">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="7 18 14 25 29 11"/>
+      </svg>
+    </div>
+
+    <h1>Comandă plasată cu succes!</h1>
+
+    <span class="order-id" id="order-id">Se încarcă...</span>
+
+    <p>Îți mulțumim pentru comandă! Am primit-o și o vom procesa în cel mai scurt timp.</p>
+
+    <div class="info-box">
+      <p><span class="dot">●</span> Vei primi un <strong>email de confirmare</strong> în câteva minute.</p>
+      <p><span class="dot">●</span> Vei primi un <strong>SMS cu numărul AWB</strong> imediat după expediere.</p>
+      <p><span class="dot">●</span> Livrare estimată: <strong>1–3 zile lucrătoare</strong> prin Colete Online.</p>
+    </div>
+
+    <p style="font-size:14px;">Ai întrebări? Scrie-ne la <a href="mailto:contact@detergenti-eco.ro" style="color:var(--blue)">contact@detergenti-eco.ro</a></p>
+
+    <a href="/" class="btn-back">← Înapoi la magazin</a>
+  </div>
+
+  <p class="footer-note">© 2026 detergenti-eco.ro</p>
+
+  <script>
+    // Show order ID from localStorage
+    const orderId = localStorage.getItem('nobacpro_last_order') || '—';
+    document.getElementById('order-id').textContent = 'Comanda #' + orderId;
+
+    // Clear cart on successful payment
+    localStorage.removeItem('nobacpro_cart');
+  </script>
+</body>
+</html>

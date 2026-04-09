@@ -1,0 +1,30 @@
+name = "nobacpro-webhook"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+[[kv_namespaces]]
+binding = "NOBACPRO_ORDERS"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+# Secrets (set via `wrangler secret put`):
+#   STRIPE_WEBHOOK_SECRET
+#   COLETE_CLIENT_ID
+#   COLETE_CLIENT_SECRET
+#   TWILIO_ACCOUNT_SID
+#   TWILIO_AUTH_TOKEN
+#   RESEND_API_KEY
+
+# Plain vars (set in Cloudflare dashboard or wrangler.toml):
+[vars]
+TWILIO_FROM           = "+40700000000"
+TWILIO_TO             = "+40700000000"     # Uncle's phone number
+
+# ⚠️ REPLACE BEFORE GO-LIVE – Uncle's pickup address:
+COLETE_SENDER_NAME    = "Proprietar Magazin"
+COLETE_SENDER_PHONE   = "0700000000"
+COLETE_SENDER_ADDRESS = "Str. Exemplu, nr. 1"
+COLETE_SENDER_CITY    = "Oradea"
+COLETE_SENDER_COUNTY  = "Bihor"
+COLETE_SENDER_POSTAL  = "410000"
+
+FROM_EMAIL            = "comenzi@detergenti-eco.ro"
