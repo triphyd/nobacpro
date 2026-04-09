@@ -353,7 +353,8 @@ input, select, textarea {
   z-index: 0;
 }
 
-.hero-bg img {
+.hero-bg img,
+.hero-bg video {
   position: absolute;
   inset: 0;
   width: 100%;
