@@ -38,13 +38,12 @@ function addToCart(btn) {
   const id = btn.dataset.id;
   const name = btn.dataset.name;
   const price = parseInt(btn.dataset.price, 10); // price in bani (cents)
-  const stripeId = btn.dataset.stripe;
 
   const existing = state.cart.find(i => i.id === id);
   if (existing) {
     existing.qty += 1;
   } else {
-    state.cart.push({ id, name, price, qty: 1, stripeId });
+    state.cart.push({ id, name, price, qty: 1 });
   }
 
   saveCart();
@@ -79,8 +78,30 @@ function updateQty(id, delta) {
   updateCartUI();
 }
 
-function getTotal() {
+function getSubtotal() {
   return state.cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+}
+
+function getCartItemCount() {
+  return state.cart.reduce((s, i) => s + i.qty, 0);
+}
+
+function getCartDiscountPercent() {
+  const count = getCartItemCount();
+  if (count >= 4) return 15;
+  if (count === 3) return 10;
+  if (count === 2) return 5;
+  return 0;
+}
+
+function getCartDiscount() {
+  const pct = getCartDiscountPercent();
+  if (pct === 0) return 0;
+  return Math.round(getSubtotal() * pct / 100);
+}
+
+function getTotal() {
+  return getSubtotal() - getCartDiscount();
 }
 
 function getTotalFormatted() {
@@ -95,7 +116,7 @@ function formatPrice(bani) {
    CART UI
    ============================================================ */
 function updateCartUI() {
-  const count = state.cart.reduce((s, i) => s + i.qty, 0);
+  const count = getCartItemCount();
 
   // Badge
   const badge = document.getElementById('cart-badge');
@@ -157,7 +178,23 @@ function renderDrawerItems() {
     container.appendChild(row);
   });
 
-  totalEl.textContent = getTotalFormatted();
+  totalEl.textContent = formatPrice(getSubtotal());
+
+  const discountPct = getCartDiscountPercent();
+  const discountEl = document.getElementById('drawer-discount');
+  const discountAmountEl = document.getElementById('drawer-discount-amount');
+  const totalFinalWrap = document.getElementById('drawer-total-final-wrap');
+  const totalFinalEl = document.getElementById('drawer-total-final');
+
+  if (discountPct > 0) {
+    discountAmountEl.textContent = `−${formatPrice(getCartDiscount())} (${discountPct}% reducere)`;
+    discountEl.hidden = false;
+    totalFinalEl.textContent = getTotalFormatted();
+    totalFinalWrap.hidden = false;
+  } else {
+    discountEl.hidden = true;
+    totalFinalWrap.hidden = true;
+  }
 
   const total = getTotal();
   if (total >= 15000) {
@@ -226,7 +263,13 @@ function renderModalSummary() {
   state.cart.forEach(item => {
     html += `<div class="summary-item"><span>${escHtml(item.name)} × ${item.qty}</span><span>${formatPrice(item.price * item.qty)}</span></div>`;
   });
-  html += `<hr class="summary-divider"><div class="summary-total"><span>Total</span><span>${getTotalFormatted()}</span></div>`;
+  html += `<hr class="summary-divider">`;
+  const discountPct = getCartDiscountPercent();
+  if (discountPct > 0) {
+    html += `<div class="summary-item"><span>Subtotal</span><span>${formatPrice(getSubtotal())}</span></div>`;
+    html += `<div class="summary-discount"><span>Reducere coș (${discountPct}%)</span><span>−${formatPrice(getCartDiscount())}</span></div>`;
+  }
+  html += `<div class="summary-total"><span>Total</span><span>${getTotalFormatted()}</span></div>`;
   el.innerHTML = html;
 }
 
@@ -305,9 +348,11 @@ async function submitOrder(event) {
       id: i.id,
       name: i.name,
       qty: i.qty,
-      price: i.price,
-      stripeId: i.stripeId
+      price: i.price
     })),
+    subtotal: getSubtotal(),
+    discountPercent: getCartDiscountPercent(),
+    discountAmount: getCartDiscount(),
     total: getTotal(),
     customer
   };
@@ -341,6 +386,25 @@ async function submitOrder(event) {
     errorEl.hidden = false;
     btn.disabled = false;
     btn.innerHTML = 'Plătește cu cardul →';
+  }
+}
+
+/* ============================================================
+   WELCOME BANNER
+   ============================================================ */
+function dismissWelcome() {
+  const banner = document.getElementById('welcome-banner');
+  if (banner) {
+    banner.classList.add('dismissed');
+    setTimeout(() => banner.remove(), 350);
+    sessionStorage.setItem('welcome_dismissed', '1');
+  }
+}
+
+function initWelcomeBanner() {
+  if (sessionStorage.getItem('welcome_dismissed')) {
+    const banner = document.getElementById('welcome-banner');
+    if (banner) banner.remove();
   }
 }
 
@@ -451,6 +515,7 @@ function escHtml(str) {
    INIT
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
+  initWelcomeBanner();
   loadCart();
   updateCartUI();
   initAccordion();
