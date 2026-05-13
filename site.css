@@ -677,7 +677,7 @@ input, select, textarea {
 
 .card-image-wrap {
   position: relative;
-  background: var(--blue-light);
+  background: var(--white);
   border-radius: 8px 8px 0 0;
   display: flex;
   align-items: center;
