@@ -362,7 +362,7 @@ async function submitOrder(event) {
   btn.innerHTML = '<span class="spinner"></span> Se procesează...';
 
   try {
-    const resp = await fetch('http://nobacpro-create-order.horves-srl.workers.dev/', {
+    const resp = await fetch('https://nobacpro-create-order.horves-srl.workers.dev/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
