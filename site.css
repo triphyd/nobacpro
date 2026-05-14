@@ -2136,3 +2136,217 @@ input, select, textarea {
   color: rgba(255,255,255,0.4);
   text-align: center;
 }
+
+/* ============================================================
+   DELIVERY TYPE TOGGLE
+   Append these styles to the bottom of site.css
+   ============================================================ */
+
+.delivery-toggle {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.delivery-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  text-align: center;
+}
+
+.delivery-btn:hover {
+  border-color: #1A56DB;
+  color: #1A56DB;
+}
+
+.delivery-btn.active {
+  border-color: #1A56DB;
+  background: #eff6ff;
+  color: #1A56DB;
+  font-weight: 600;
+}
+
+/* Easybox info text */
+.easybox-info {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+/* Locker select button */
+.btn-locker-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #1A56DB;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-locker-select:hover {
+  background: #1648c0;
+}
+
+/* Selected locker display */
+.locker-selected {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.locker-icon {
+  font-size: 22px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.locker-selected > div {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.locker-change-btn {
+  background: none;
+  border: 1px solid #16a34a;
+  color: #16a34a;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.locker-change-btn:hover {
+  background: #16a34a;
+  color: #fff;
+}
+/* ============================================================
+   Locker list
+   ============================================================ */
+.locker-list {
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+.locker-group-label {
+  position: sticky;
+  top: 0;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.locker-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-bottom: 1px solid #f3f4f6;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+}
+.locker-item:hover { background: #f0f9ff; }
+.locker-item.selected {
+  background: #eff6ff;
+  border-left: 3px solid #1A56DB;
+}
+.locker-item-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: #111;
+}
+.locker-item-addr {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+.locker-loading-msg,
+.courier-loading-msg {
+  font-size: 13px;
+  color: #6b7280;
+  padding: 8px 0;
+  margin: 0;
+}
+.locker-error-msg,
+.courier-error-msg {
+  font-size: 13px;
+  color: #dc2626;
+  padding: 6px 0;
+  margin: 0;
+}
+
+/* ============================================================
+   Courier selector
+   ============================================================ */
+.courier-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+.courier-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+.courier-option:hover { border-color: #93c5fd; }
+.courier-option.selected {
+  border-color: #1A56DB;
+  background: #eff6ff;
+}
+.courier-name {
+  flex: 1;
+  font-weight: 600;
+  font-size: 14px;
+  color: #111;
+}
+.courier-details {
+  font-size: 12px;
+  color: #6b7280;
+}
+.courier-price {
+  font-weight: 700;
+  font-size: 15px;
+  color: #1A56DB;
+  white-space: nowrap;
+}

@@ -687,11 +687,13 @@
     </button>
     <h2 class="modal-title" id="modal-title">Finalizează comanda</h2>
     <p class="modal-sub">Completează datele de livrare</p>
-
+ 
     <!-- Order summary -->
     <div class="modal-summary" id="modal-summary"></div>
-
+ 
     <form id="checkout-form" onsubmit="submitOrder(event)" novalidate>
+ 
+      <!-- Name / Phone / Email — always visible -->
       <div class="form-group">
         <label for="f-name">Nume și prenume *</label>
         <input type="text" id="f-name" name="name" placeholder="Ion Popescu" required autocomplete="name">
@@ -706,55 +708,124 @@
           <input type="email" id="f-email" name="email" placeholder="email@exemplu.ro" required autocomplete="email">
         </div>
       </div>
+ 
+      <!-- Delivery type toggle -->
       <div class="form-group">
-        <label for="f-address">Stradă și număr *</label>
-        <input type="text" id="f-address" name="address" placeholder="Str. Mihai Eminescu, nr. 12" required autocomplete="address-line1">
+        <label>Metoda de livrare *</label>
+        <div class="delivery-toggle">
+          <button type="button" id="delivery-home-btn" class="delivery-btn active" onclick="setDeliveryType('home')">
+            🏠 Acasă (curier)
+          </button>
+          <button type="button" id="delivery-easybox-btn" class="delivery-btn" onclick="setDeliveryType('easybox')">
+            📦 Easybox (locker)
+          </button>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="f-address2">Bloc / Scară / Ap <span class="optional">(opțional)</span></label>
-        <input type="text" id="f-address2" name="addressExtra" placeholder="Bloc A2, Sc. 1, Ap. 34" autocomplete="address-line2">
-      </div>
-      <div class="form-row">
+ 
+      <!-- HOME DELIVERY fields -->
+      <div id="home-address-fields">
         <div class="form-group">
-          <label for="f-city">Localitate *</label>
-          <input type="text" id="f-city" name="city" placeholder="Cluj-Napoca" required autocomplete="address-level2">
+          <label for="f-address">Stradă și număr *</label>
+          <input type="text" id="f-address" name="address" placeholder="Str. Mihai Eminescu, nr. 12" required data-required autocomplete="address-line1">
         </div>
         <div class="form-group">
-          <label for="f-county">Județ *</label>
-          <select id="f-county" name="county" required autocomplete="address-level1">
-            <option value="">— Selectează —</option>
-            <option>Alba</option><option>Arad</option><option>Argeș</option><option>Bacău</option>
-            <option>Bihor</option><option>Bistrița-Năsăud</option><option>Botoșani</option>
-            <option>Brașov</option><option>Brăila</option><option>București</option>
-            <option>Buzău</option><option>Caraș-Severin</option><option>Călărași</option>
-            <option>Cluj</option><option>Constanța</option><option>Covasna</option>
-            <option>Dâmbovița</option><option>Dolj</option><option>Galați</option>
-            <option>Giurgiu</option><option>Gorj</option><option>Harghita</option>
-            <option>Hunedoara</option><option>Ialomița</option><option>Iași</option>
-            <option>Ilfov</option><option>Maramureș</option><option>Mehedinți</option>
-            <option>Mureș</option><option>Neamț</option><option>Olt</option>
-            <option>Prahova</option><option>Satu Mare</option><option>Sălaj</option>
-            <option>Sibiu</option><option>Suceava</option><option>Teleorman</option>
-            <option>Timiș</option><option>Tulcea</option><option>Vaslui</option>
-            <option>Vâlcea</option><option>Vrancea</option>
+          <label for="f-address2">Bloc / Scară / Ap <span class="optional">(opțional)</span></label>
+          <input type="text" id="f-address2" name="addressExtra" placeholder="Bloc A2, Sc. 1, Ap. 34" autocomplete="address-line2">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-city">Localitate *</label>
+            <input type="text" id="f-city" name="city" placeholder="Cluj-Napoca" required data-required autocomplete="address-level2">
+          </div>
+          <div class="form-group">
+            <label for="f-county">Județ *</label>
+            <select id="f-county" name="county" required data-required autocomplete="address-level1">
+              <option value="">— Selectează —</option>
+              <option>Alba</option><option>Arad</option><option>Argeș</option><option>Bacău</option>
+              <option>Bihor</option><option>Bistrița-Năsăud</option><option>Botoșani</option>
+              <option>Brașov</option><option>Brăila</option><option>București</option>
+              <option>Buzău</option><option>Caraș-Severin</option><option>Călărași</option>
+              <option>Cluj</option><option>Constanța</option><option>Covasna</option>
+              <option>Dâmbovița</option><option>Dolj</option><option>Galați</option>
+              <option>Giurgiu</option><option>Gorj</option><option>Harghita</option>
+              <option>Hunedoara</option><option>Ialomița</option><option>Iași</option>
+              <option>Ilfov</option><option>Maramureș</option><option>Mehedinți</option>
+              <option>Mureș</option><option>Neamț</option><option>Olt</option>
+              <option>Prahova</option><option>Satu Mare</option><option>Sălaj</option>
+              <option>Sibiu</option><option>Suceava</option><option>Teleorman</option>
+              <option>Timiș</option><option>Tulcea</option><option>Vaslui</option>
+              <option>Vâlcea</option><option>Vrancea</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="max-width:180px">
+          <label for="f-postal">Cod poștal *</label>
+          <input type="text" id="f-postal" name="postalCode" placeholder="400001" maxlength="6" required data-required autocomplete="postal-code">
+        </div>
+      </div>
+
+      <div id="courier-selector" hidden>
+        <div class="form-group">
+          <label>Metodă de livrare *</label>
+          <div id="courier-loading" hidden>
+            <p class="courier-loading-msg">⏳ Se calculează prețurile...</p>
+          </div>
+          <div id="courier-list" class="courier-list"></div>
+          <div id="courier-error" class="form-error" hidden>
+            Te rugăm selectează o metodă de livrare.
+          </div>
+        </div>
+      </div>
+
+      <!-- EASYBOX fields -->
+      <div id="easybox-fields" hidden>
+        <div class="form-group">
+          <p class="easybox-info">
+            Selectează județul, apoi alege un locker din listă.
+            Coletul va fi disponibil pentru ridicare 24/7.
+          </p>
+          <label for="f-locker-county">Județ *</label>
+          <select id="f-locker-county" onchange="fetchLockers(this.value)">
+            <option value="">— Selectează județul —</option>
+            <option>Alba</option><option>Arad</option><option>Argeș</option>
+            <option>Bacău</option><option>Bihor</option><option>Bistrița-Năsăud</option>
+            <option>Botoșani</option><option>Brașov</option><option>Brăila</option>
+            <option>București</option><option>Buzău</option><option>Caraș-Severin</option>
+            <option>Călărași</option><option>Cluj</option><option>Constanța</option>
+            <option>Covasna</option><option>Dâmbovița</option><option>Dolj</option>
+            <option>Galați</option><option>Giurgiu</option><option>Gorj</option>
+            <option>Harghita</option><option>Hunedoara</option><option>Ialomița</option>
+            <option>Iași</option><option>Ilfov</option><option>Maramureș</option>
+            <option>Mehedinți</option><option>Mureș</option><option>Neamț</option>
+            <option>Olt</option><option>Prahova</option><option>Satu Mare</option>
+            <option>Sălaj</option><option>Sibiu</option><option>Suceava</option>
+            <option>Teleorman</option><option>Timiș</option><option>Tulcea</option>
+            <option>Vaslui</option><option>Vâlcea</option><option>Vrancea</option>
           </select>
         </div>
+        <div id="locker-loading" hidden>
+          <p class="locker-loading-msg">⏳ Se încarcă lockerele...</p>
+        </div>
+        <div id="locker-list" class="locker-list"></div>
+        <div id="locker-display" hidden></div>
+        <div id="locker-error" class="form-error" hidden>
+          Te rugăm selectează un locker.
+        </div>
       </div>
-      <div class="form-group" style="max-width:180px">
-        <label for="f-postal">Cod poștal *</label>
-        <input type="text" id="f-postal" name="postalCode" placeholder="400001" maxlength="6" required autocomplete="postal-code">
-      </div>
+ 
+      <!-- Notes — always visible -->
       <div class="form-group">
         <label for="f-notes">Mențiuni <span class="optional">(opțional)</span></label>
         <textarea id="f-notes" name="notes" placeholder="Instrucțiuni speciale..." rows="2"></textarea>
       </div>
+ 
       <div class="form-group form-check">
         <input type="checkbox" id="f-terms" name="terms" required>
         <label for="f-terms">Sunt de acord cu <a href="/termeni.html" target="_blank" rel="noopener">Termenii și condițiile</a> și <a href="/confidentialitate.html" target="_blank" rel="noopener">Politica de confidențialitate</a> *</label>
       </div>
-
+ 
       <div id="form-error" class="form-error" hidden></div>
-
+ 
       <button type="submit" class="btn btn-primary btn-block btn-pay" id="pay-btn">
         Plătește cu cardul →
       </button>
