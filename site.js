@@ -757,10 +757,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const countySelect = document.getElementById('f-county');
   const cityInput = document.getElementById('f-city');
 
+  const postalInput = document.getElementById('f-postal');
+
   countySelect.addEventListener('change', () => {
-    if (cityInput.value.trim()) fetchDeliveryPrices();
+    const city   = cityInput.value.trim();
+    const postal = postalInput ? postalInput.value.trim() : '';
+    if (city && postal) fetchDeliveryPrices();
   });
   cityInput.addEventListener('blur', () => {
-    if (countySelect.value) fetchDeliveryPrices();
+    const county = countySelect.value;
+    const postal = postalInput ? postalInput.value.trim() : '';
+    if (county && postal) fetchDeliveryPrices();
   });
+  if (postalInput) {
+    postalInput.addEventListener('blur', () => {
+      const county = countySelect.value;
+      const city   = cityInput.value.trim();
+      if (county && city) fetchDeliveryPrices();
+    });
+  }
 });
