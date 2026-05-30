@@ -693,7 +693,7 @@ function validateForm() {
 
   // Phone basic check
   const phone = form.querySelector('#f-phone');
-  if (phone && phone.value && !/^0[67]\d{8}$/.test(phone.value.replace(/\s/g, ''))) {
+  if (phone && phone.value && !/^(\+?40|0)[67]\d{8}$/.test(phone.value.replace(/[\s-]/g, ''))) {
     phone.classList.add('invalid');
     valid = false;
   }
