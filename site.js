@@ -981,3 +981,11 @@ document.addEventListener('DOMContentLoaded', () => {
     numberInput.addEventListener('blur', () => maybeFetchPrice());
   }
 });
+  const numberInput = document.getElementById('f-number');
+if (numberInput) {
+  numberInput.addEventListener('blur', () => {
+    if (state.deliveryType === 'home' && state.postalCode && state.street) {
+      maybeFetchPrice();
+    }
+  });
+}
