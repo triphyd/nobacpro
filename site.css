@@ -2350,3 +2350,60 @@ input, select, textarea {
   color: #1A56DB;
   white-space: nowrap;
 }
+
+/* ============================================================
+   Autocomplete address fields
+   ============================================================ */
+.autocomplete-group { position: relative; }
+.autocomplete-wrapper { position: relative; display: flex; gap: 8px; align-items: center; }
+.autocomplete-wrapper input { flex: 1; }
+
+.ac-dropdown {
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin: 2px 0 0;
+  padding: 4px 0;
+  list-style: none;
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.ac-item {
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.ac-item:hover, .ac-item.highlighted { background: #eff6ff; color: #1A56DB; }
+.ac-item.empty { color: #9ca3af; cursor: default; }
+
+.ac-change-btn {
+  font-size: 12px;
+  padding: 4px 10px;
+  background: none;
+  border: 1px solid #1A56DB;
+  color: #1A56DB;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ac-change-btn:hover { background: #1A56DB; color: #fff; }
+
+.postal-display { margin: 8px 0 16px; }
+.postal-detected {
+  padding: 10px 14px;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #166534;
+}
+
+input:disabled {
+  background: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}

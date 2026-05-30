@@ -12,6 +12,10 @@ const state = {
   deliveryType: 'home',    // 'home' | 'easybox'
   selectedCourier: null,   // { serviceId, courierName, price }
   shippingPoint: null,     // { id, name, address, city, county, postalCode, operator }
+  city: null,              // validated city string
+  street: null,            // validated street string
+  streetNumber: '',        // user-entered number
+  postalCode: null,        // auto-detected postal
 };
 
 /* ============================================================
@@ -312,9 +316,6 @@ function setDeliveryType(type) {
     state.shippingPoint = null;
     state.selectedCourier = null;
     document.getElementById('courier-selector').hidden = false;
-    const county = document.getElementById('f-county').value;
-    const city = document.getElementById('f-city').value.trim();
-    if (county && city) fetchDeliveryPrices();
   } else {
     homeFields.hidden = true;
     easyboxFields.hidden = false;
@@ -412,68 +413,265 @@ function selectLocker(btn) {
 }
 
 /* ============================================================
-   COURIER PRICE FETCHING
+   AUTOCOMPLETE — generic helper
    ============================================================ */
-async function fetchDeliveryPrices() {
+function setupAutocomplete({ inputId, dropdownId, fetchFn, renderItem, onSelect, minChars = 2, debounceMs = 300 }) {
+  const input = document.getElementById(inputId);
+  const dropdown = document.getElementById(dropdownId);
+  let debounceTimer = null;
+  let currentItems = [];
+
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    const q = input.value.trim();
+    if (q.length < minChars) {
+      dropdown.hidden = true;
+      return;
+    }
+    debounceTimer = setTimeout(async () => {
+      try {
+        currentItems = await fetchFn(q);
+        if (!currentItems || !currentItems.length) {
+          dropdown.innerHTML = '<li class="ac-item empty">Niciun rezultat</li>';
+          dropdown.hidden = false;
+          return;
+        }
+        dropdown.innerHTML = currentItems
+          .map((item, i) => renderItem(item).replace('<li ', `<li data-index="${i}" `))
+          .join('');
+        dropdown.hidden = false;
+      } catch (e) {
+        dropdown.hidden = true;
+      }
+    }, debounceMs);
+  });
+
+  dropdown.addEventListener('click', e => {
+    const li = e.target.closest('li[data-index]');
+    if (!li) return;
+    const item = currentItems[parseInt(li.dataset.index, 10)];
+    if (item) {
+      dropdown.hidden = true;
+      onSelect(item);
+    }
+  });
+
+  document.addEventListener('click', e => {
+    if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.hidden = true;
+    }
+  });
+}
+
+/* ============================================================
+   ADDRESS AUTOCOMPLETE — county / city / street / postal
+   ============================================================ */
+function onCountyChange() {
+  state.city = null;
+  state.street = null;
+  state.postalCode = null;
+  state.selectedCourier = null;
   const county = document.getElementById('f-county').value;
-  const city = document.getElementById('f-city').value.trim();
-  const postalCode = document.getElementById('f-postal').value.trim();
-  const address = document.getElementById('f-address').value.trim();
-  if (!county || !city) return;
+  const cityInput = document.getElementById('f-city-input');
+  cityInput.disabled = !county;
+  cityInput.value = '';
+  document.getElementById('city-change-btn').hidden = true;
+  document.getElementById('f-city-dropdown').hidden = true;
+  const streetInput = document.getElementById('f-street-input');
+  streetInput.disabled = true;
+  streetInput.value = '';
+  document.getElementById('street-change-btn').hidden = true;
+  document.getElementById('f-street-dropdown').hidden = true;
+  updatePostalDisplay();
+  document.getElementById('courier-selector').hidden = true;
+  renderModalSummary();
+}
+
+function showChangeButton(field) {
+  document.getElementById(`${field}-change-btn`).hidden = false;
+}
+
+function resetCity() {
+  state.city = null;
+  state.street = null;
+  state.postalCode = null;
+  state.selectedCourier = null;
+  const cityInput = document.getElementById('f-city-input');
+  cityInput.disabled = false;
+  cityInput.value = '';
+  document.getElementById('city-change-btn').hidden = true;
+  const streetInput = document.getElementById('f-street-input');
+  streetInput.disabled = true;
+  streetInput.value = '';
+  document.getElementById('street-change-btn').hidden = true;
+  updatePostalDisplay();
+  document.getElementById('courier-selector').hidden = true;
+  renderModalSummary();
+}
+
+function resetStreet() {
+  state.street = null;
+  state.postalCode = null;
+  state.selectedCourier = null;
+  const streetInput = document.getElementById('f-street-input');
+  streetInput.disabled = false;
+  streetInput.value = '';
+  document.getElementById('street-change-btn').hidden = true;
+  updatePostalDisplay();
+  document.getElementById('courier-selector').hidden = true;
+  renderModalSummary();
+}
+
+async function fetchPostalCode() {
+  const county = document.getElementById('f-county').value;
+  if (!county || !state.city || !state.street) return;
+  try {
+    const resp = await fetch(
+      `${WORKER_DELIVERY_URL}/?action=postal&county=${encodeURIComponent(county)}&city=${encodeURIComponent(state.city)}&street=${encodeURIComponent(state.street)}`
+    );
+    const list = await resp.json();
+    if (list && list.length) {
+      if (list.length === 1) {
+        state.postalCode = list[0].postalCode;
+      } else {
+        renderPostalSelect(list);
+        return;
+      }
+    }
+  } catch (e) {}
+  updatePostalDisplay();
+}
+
+function renderPostalSelect(list) {
+  const el = document.getElementById('f-postal-display');
+  el.innerHTML = `
+    <label for="f-postal-select">Cod poștal *</label>
+    <select id="f-postal-select" onchange="state.postalCode=this.value; updatePostalDisplay(); maybeFetchPrice();">
+      <option value="">— Selectează —</option>
+      ${list.map(p => `<option value="${escHtml(p.postalCode)}">${escHtml(p.postalCode)}${p.streetNumbers ? ` (nr. ${escHtml(p.streetNumbers)})` : ''}</option>`).join('')}
+    </select>
+  `;
+}
+
+function updatePostalDisplay() {
+  const el = document.getElementById('f-postal-display');
+  if (!el) return;
+  if (state.postalCode) {
+    el.innerHTML = `<div class="postal-detected">
+      📍 Cod poștal detectat: <strong>${escHtml(state.postalCode)}</strong>
+    </div>`;
+  } else {
+    el.innerHTML = '';
+  }
+}
+
+function initCityAutocomplete() {
+  setupAutocomplete({
+    inputId:    'f-city-input',
+    dropdownId: 'f-city-dropdown',
+    fetchFn: async (q) => {
+      const county = document.getElementById('f-county').value;
+      if (!county) return [];
+      const resp = await fetch(
+        `${WORKER_DELIVERY_URL}/?action=cities&county=${encodeURIComponent(county)}&q=${encodeURIComponent(q)}`
+      );
+      return await resp.json();
+    },
+    renderItem: (item) => `<li class="ac-item" data-value="${escHtml(item.name)}">${escHtml(item.name)}</li>`,
+    onSelect: (item) => {
+      state.city = item.name;
+      document.getElementById('f-city-input').value = item.name;
+      document.getElementById('f-city-input').disabled = true;
+      document.getElementById('f-street-input').disabled = false;
+      document.getElementById('f-street-input').value = '';
+      state.street = null;
+      state.postalCode = null;
+      updatePostalDisplay();
+      showChangeButton('city');
+    },
+  });
+}
+
+function initStreetAutocomplete() {
+  setupAutocomplete({
+    inputId:    'f-street-input',
+    dropdownId: 'f-street-dropdown',
+    fetchFn: async (q) => {
+      const county = document.getElementById('f-county').value;
+      if (!county || !state.city) return [];
+      const resp = await fetch(
+        `${WORKER_DELIVERY_URL}/?action=streets&county=${encodeURIComponent(county)}&city=${encodeURIComponent(state.city)}&q=${encodeURIComponent(q)}`
+      );
+      return await resp.json();
+    },
+    renderItem: (item) => `<li class="ac-item" data-value="${escHtml(item.name)}">${escHtml(item.name)}</li>`,
+    onSelect: async (item) => {
+      state.street = item.name;
+      document.getElementById('f-street-input').value = item.name;
+      document.getElementById('f-street-input').disabled = true;
+      showChangeButton('street');
+      await fetchPostalCode();
+      maybeFetchPrice();
+    },
+  });
+}
+
+/* ============================================================
+   PRICE FETCHING
+   ============================================================ */
+async function maybeFetchPrice() {
+  const county = document.getElementById('f-county').value;
+  if (!county || !state.city || !state.street || !state.postalCode) return;
 
   const section = document.getElementById('courier-selector');
   const loading = document.getElementById('courier-loading');
-  const list = document.getElementById('courier-list');
   section.hidden = false;
   loading.hidden = false;
-  list.innerHTML = '';
+  document.getElementById('courier-list').innerHTML = '';
   state.selectedCourier = null;
   renderModalSummary();
 
   try {
-    const params = new URLSearchParams({ action: 'prices', county, city, postalCode, address });
+    const number = document.getElementById('f-number')?.value.trim() || '1';
+    const params = new URLSearchParams({
+      action:     'price',
+      county,
+      city:       state.city,
+      street:     state.street,
+      number:     number || '1',
+      postalCode: state.postalCode,
+    });
     const resp = await fetch(`${WORKER_DELIVERY_URL}/?${params}`);
     const data = await resp.json();
-    renderCourierList(data);
+
+    if (data && data.price !== undefined) {
+      state.selectedCourier = data;
+      renderSingleCourier(data);
+    } else {
+      renderCourierError();
+    }
   } catch (e) {
-    list.innerHTML = '<p class="courier-error-msg">Nu am putut calcula prețurile. Livrarea va fi calculată automat.</p>';
-    state.selectedCourier = { serviceId: null, courierName: 'Standard', price: 0 };
-    renderModalSummary();
+    renderCourierError();
   } finally {
     loading.hidden = true;
   }
 }
 
-function renderCourierList(couriers) {
+function renderSingleCourier(c) {
   const list = document.getElementById('courier-list');
-  if (!couriers || !couriers.length) {
-    list.innerHTML = '<p class="courier-error-msg">Nicio opțiune de livrare disponibilă.</p>';
-    state.selectedCourier = { serviceId: null, courierName: 'Standard', price: 0 };
-    renderModalSummary();
-    return;
-  }
-  list.innerHTML = couriers.map((c, i) => {
-    const priceLabel = c.price === 0 ? 'Gratuit' : formatPrice(c.price);
-    const dataAttr = escHtml(JSON.stringify(c));
-    return `<button type="button" class="courier-option${i === 0 ? ' selected' : ''}"
-      data-courier="${dataAttr}"
-      onclick="selectCourier(this)">
+  list.innerHTML = `
+    <div class="courier-option selected">
       <span class="courier-name">${escHtml(c.courierName)}</span>
       <span class="courier-details">${escHtml(c.estimatedDelivery || '1–3 zile')}</span>
-      <span class="courier-price">${priceLabel}</span>
-    </button>`;
-  }).join('');
-  state.selectedCourier = couriers[0];
+      <span class="courier-price">${c.price === 0 ? 'Gratuit' : formatPrice(c.price)}</span>
+    </div>
+  `;
   renderModalSummary();
 }
 
-function selectCourier(btn) {
-  const c = JSON.parse(btn.dataset.courier);
-  state.selectedCourier = c;
-  document.querySelectorAll('.courier-option').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  document.getElementById('courier-error').hidden = true;
-  renderModalSummary();
+function renderCourierError() {
+  document.getElementById('courier-list').innerHTML =
+    '<p class="courier-error-msg">Nu am putut calcula prețul. Verifică adresa.</p>';
 }
 
 /* ============================================================
@@ -507,11 +705,30 @@ function validateForm() {
     valid = false;
   }
 
-  // Home delivery: require courier selection
-  if (state.deliveryType === 'home' && !state.selectedCourier) {
-    const ce = document.getElementById('courier-error');
-    if (ce) { ce.hidden = false; }
-    valid = false;
+  if (state.deliveryType === 'home') {
+    // Require validated city, street, postal
+    if (!state.city || !state.street || !state.postalCode) {
+      const errorEl = document.getElementById('form-error');
+      if (errorEl) {
+        errorEl.textContent = 'Te rugăm completează și confirmă adresa (localitate, stradă, cod poștal).';
+        errorEl.hidden = false;
+      }
+      valid = false;
+    }
+
+    // Require courier selection
+    if (!state.selectedCourier) {
+      const ce = document.getElementById('courier-error');
+      if (ce) ce.hidden = false;
+      valid = false;
+    }
+
+    // Require street number
+    const numInput = document.getElementById('f-number');
+    if (numInput && !numInput.value.trim()) {
+      numInput.classList.add('invalid');
+      valid = false;
+    }
   }
 
   // Locker: require shipping point selection
@@ -536,8 +753,10 @@ async function submitOrder(event) {
   errorEl.hidden = true;
 
   if (!validateForm()) {
-    errorEl.textContent = 'Te rugăm completează toate câmpurile obligatorii corect.';
-    errorEl.hidden = false;
+    if (errorEl.hidden) {
+      errorEl.textContent = 'Te rugăm completează toate câmpurile obligatorii corect.';
+      errorEl.hidden = false;
+    }
     errorEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     return;
   }
@@ -564,11 +783,12 @@ async function submitOrder(event) {
       name:         form.querySelector('#f-name').value.trim(),
       phone:        form.querySelector('#f-phone').value.trim().replace(/\s/g, ''),
       email:        form.querySelector('#f-email').value.trim(),
-      address:      form.querySelector('#f-address').value.trim(),
-      addressExtra: form.querySelector('#f-address2').value.trim(),
-      city:         form.querySelector('#f-city').value.trim(),
+      address:      state.street,
+      addressExtra: form.querySelector('#f-address-extra').value.trim(),
+      city:         state.city,
       county:       form.querySelector('#f-county').value,
-      postalCode:   form.querySelector('#f-postal').value.trim(),
+      postalCode:   state.postalCode,
+      streetNumber: form.querySelector('#f-number').value.trim(),
       notes:        form.querySelector('#f-notes').value.trim(),
     };
   }
@@ -753,27 +973,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccordion();
   initSmoothScroll();
   initNavScroll();
+  initCityAutocomplete();
+  initStreetAutocomplete();
 
-  const countySelect = document.getElementById('f-county');
-  const cityInput = document.getElementById('f-city');
-
-  const postalInput = document.getElementById('f-postal');
-
-  countySelect.addEventListener('change', () => {
-    const city   = cityInput.value.trim();
-    const postal = postalInput ? postalInput.value.trim() : '';
-    if (city && postal) fetchDeliveryPrices();
-  });
-  cityInput.addEventListener('blur', () => {
-    const county = countySelect.value;
-    const postal = postalInput ? postalInput.value.trim() : '';
-    if (county && postal) fetchDeliveryPrices();
-  });
-  if (postalInput) {
-    postalInput.addEventListener('blur', () => {
-      const county = countySelect.value;
-      const city   = cityInput.value.trim();
-      if (county && city) fetchDeliveryPrices();
-    });
+  const numberInput = document.getElementById('f-number');
+  if (numberInput) {
+    numberInput.addEventListener('blur', () => maybeFetchPrice());
   }
 });
