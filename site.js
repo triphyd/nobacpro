@@ -11,7 +11,10 @@ const state = {
   modalOpen: false,
   deliveryType: 'home',    // 'home' | 'easybox'
   selectedCourier: null,   // { serviceId, courierName, price }
-  shippingPoint: null,     // { id, name, address, city, county, postalCode, operator }
+  shippingPoint: null,     // selected locker object
+  lockers: [],             // full fetched locker array for the county
+  lockerFilter: 'all',     // active operator chip
+  lockerSearch: '',        // current search text
   city: null,              // validated city string
   street: null,            // validated street string
   streetNumber: '',        // user-entered number
@@ -23,6 +26,13 @@ const state = {
    ============================================================ */
 const CART_KEY = 'nobacpro_cart';
 const WORKER_DELIVERY_URL = 'https://nobacpro-delivery.horves-srl.workers.dev';
+
+const OPERATOR_LABELS = {
+  FanCourier: 'FANbox',
+  Sameday:    'easybox',
+  DPD:        'DPD Locker',
+  Cargus:     'Cargus',
+};
 
 /* ============================================================
    CART PERSISTENCE
@@ -124,7 +134,10 @@ function formatPrice(bani) {
 
 function getDeliveryPrice() {
   if (getSubtotal() >= 15000) return 0;
-  return state.selectedCourier?.price || 0;
+  if (state.deliveryType === 'home') {
+    return state.selectedCourier?.price || 0;
+  }
+  return state.shippingPoint?.price || 0;
 }
 
 function getGrandTotal() {
@@ -285,11 +298,20 @@ function renderModalSummary() {
     html += `<div class="summary-discount"><span>Reducere coș (${discountPct}%)</span><span>−${formatPrice(getCartDiscount())}</span></div>`;
   }
   if (getDeliveryPrice() > 0) {
+    let deliveryLabel;
+    if (state.deliveryType === 'home') {
+      deliveryLabel = escHtml(state.selectedCourier?.courierName || '');
+    } else {
+      const op = state.shippingPoint?.operator || '';
+      const opLabel = OPERATOR_LABELS[op] || op;
+      const lockerName = state.shippingPoint?.name || '';
+      deliveryLabel = escHtml(opLabel + (lockerName ? ' · ' + lockerName : ''));
+    }
     html += `<div class="summary-item">
-      <span>Livrare (${escHtml(state.selectedCourier?.courierName || '')})</span>
+      <span>Livrare (${deliveryLabel})</span>
       <span>${formatPrice(getDeliveryPrice())}</span>
     </div>`;
-  } else if (state.deliveryType !== 'home' || state.selectedCourier) {
+  } else if (state.deliveryType !== 'home' || state.selectedCourier || state.shippingPoint) {
     html += `<div class="summary-item"><span>Livrare</span><span>Gratuit</span></div>`;
   }
   html += `<div class="summary-total"><span>Total de plată</span><span>${formatPrice(getGrandTotal())}</span></div>`;
@@ -326,7 +348,10 @@ function setDeliveryType(type) {
     document.getElementById('courier-selector').hidden = true;
     document.getElementById('f-locker-county').value = '';
     document.getElementById('locker-list').innerHTML = '';
-    document.getElementById('locker-display').hidden = true;
+    document.getElementById('locker-chips').innerHTML = '';
+    state.lockers = [];
+    state.lockerFilter = 'all';
+    state.lockerSearch = '';
     state.shippingPoint = null;
   }
 }
@@ -336,80 +361,92 @@ function setDeliveryType(type) {
    ============================================================ */
 async function fetchLockers(county) {
   if (!county) return;
-  const lockerList = document.getElementById('locker-list');
-  const lockerLoading = document.getElementById('locker-loading');
-  const lockerDisplay = document.getElementById('locker-display');
-  lockerList.innerHTML = '';
-  lockerDisplay.hidden = true;
+  const loading = document.getElementById('locker-loading');
+  const list    = document.getElementById('locker-list');
+  if (loading) loading.hidden = false;
+  if (list) list.innerHTML = '';
+  state.lockers = [];
   state.shippingPoint = null;
-  state.selectedCourier = null;
-  lockerLoading.hidden = false;
+  state.lockerFilter = 'all';
+  state.lockerSearch = '';
+  const searchInput = document.getElementById('locker-search');
+  if (searchInput) searchInput.value = '';
   try {
-    const resp = await fetch(
-      `${WORKER_DELIVERY_URL}/?action=lockers&county=${encodeURIComponent(county)}`
-    );
+    const resp = await fetch(`${WORKER_DELIVERY_URL}/?action=lockers&county=${encodeURIComponent(county)}`);
     const data = await resp.json();
-    renderLockerList(data);
+    state.lockers = Array.isArray(data) ? data : [];
   } catch (e) {
-    lockerList.innerHTML = '<p class="locker-error-msg">Nu am putut încărca lockerele. Încearcă din nou.</p>';
+    state.lockers = [];
   } finally {
-    lockerLoading.hidden = true;
+    if (loading) loading.hidden = true;
   }
+  renderLockerChips();
+  renderLockerList();
+  renderModalSummary();
 }
 
-function renderLockerList(lockers) {
-  const lockerList = document.getElementById('locker-list');
-  if (!lockers || !lockers.length) {
-    lockerList.innerHTML = '<p class="locker-error-msg">Nu există lockere disponibile în acest județ.</p>';
+function renderLockerChips() {
+  const ops = ['all', ...new Set(state.lockers.map(l => l.operator))];
+  const el = document.getElementById('locker-chips');
+  if (!el) return;
+  el.innerHTML = ops.map(op => {
+    const label = op === 'all' ? 'Toate' : (OPERATOR_LABELS[op] || op);
+    const active = state.lockerFilter === op ? ' active' : '';
+    return `<button type="button" class="locker-chip${active}"
+      onclick="setLockerFilter('${op}')">${label}</button>`;
+  }).join('');
+}
+
+function setLockerFilter(op) {
+  state.lockerFilter = op;
+  renderLockerChips();
+  renderLockerList();
+}
+
+function renderLockerList() {
+  const term = (state.lockerSearch || '').toLowerCase().trim();
+  let items = state.lockers;
+  if (state.lockerFilter !== 'all') {
+    items = items.filter(l => l.operator === state.lockerFilter);
+  }
+  if (term) {
+    items = items.filter(l =>
+      (l.name + ' ' + l.address).toLowerCase().includes(term)
+    );
+  }
+  const list = document.getElementById('locker-list');
+  if (!list) return;
+  if (!items.length) {
+    list.innerHTML = '<p class="locker-empty">Niciun punct găsit. Încearcă alt termen.</p>';
     return;
   }
-  const groups = {};
-  lockers.forEach(l => {
-    const op = l.operator || 'Locker';
-    if (!groups[op]) groups[op] = [];
-    groups[op].push(l);
-  });
-  let html = '';
-  for (const [op, items] of Object.entries(groups)) {
-    html += `<div class="locker-group-label">${escHtml(op)}</div>`;
-    items.forEach(l => {
-      const dataAttr = escHtml(JSON.stringify(l));
-      html += `<button type="button" class="locker-item"
-        data-locker="${dataAttr}"
-        onclick="selectLocker(this)">
-        <span class="locker-item-name">${escHtml(l.name)}</span>
-        <span class="locker-item-addr">${escHtml(l.address)}, ${escHtml(l.city)}</span>
-      </button>`;
-    });
+  const shown = items.slice(0, 60);
+  list.innerHTML = shown.map(l => {
+    const label    = OPERATOR_LABELS[l.operator] || l.operator;
+    const selected = state.shippingPoint?.id === l.id ? ' selected' : '';
+    const priceLbl = l.price === 0 ? 'Gratuit' : formatPrice(l.price);
+    const data     = escHtml(JSON.stringify(l));
+    return `<button type="button" class="locker-option${selected}"
+      data-locker="${data}" onclick="selectLocker(JSON.parse(this.dataset.locker))">
+      <span class="locker-badge locker-badge-${l.operator.toLowerCase()}">${escHtml(label)}</span>
+      <span class="locker-info">
+        <span class="locker-name">${escHtml(l.name)}</span>
+        <span class="locker-addr">${escHtml(l.address)}</span>
+      </span>
+      <span class="locker-price">${priceLbl}</span>
+    </button>`;
+  }).join('');
+  if (items.length > shown.length) {
+    list.innerHTML += `<p class="locker-more">+${items.length - shown.length} puncte — rafinează căutarea</p>`;
   }
-  lockerList.innerHTML = html;
 }
 
-function selectLocker(btn) {
-  const l = JSON.parse(btn.dataset.locker);
-  state.shippingPoint = l;
-  document.querySelectorAll('.locker-item').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  const display = document.getElementById('locker-display');
-  display.hidden = false;
-  display.innerHTML = `
-    <div class="locker-selected">
-      <span class="locker-icon">📦</span>
-      <div>
-        <strong>${escHtml(l.name)}</strong><br>
-        <small>${escHtml(l.address)}, ${escHtml(l.city)}</small><br>
-        <small style="color:#6b7280;">${escHtml(l.operator || '')}</small>
-      </div>
-      <button type="button" class="locker-change-btn"
-        onclick="document.getElementById('locker-display').hidden=true;
-                 state.shippingPoint=null;
-                 document.querySelectorAll('.locker-item')
-                   .forEach(b=>b.classList.remove('selected'))">
-        Schimbă
-      </button>
-    </div>
-  `;
-  document.getElementById('locker-error').hidden = true;
+function selectLocker(locker) {
+  state.shippingPoint = locker;
+  renderLockerList();
+  renderModalSummary();
+  const err = document.getElementById('locker-error');
+  if (err) err.hidden = true;
 }
 
 /* ============================================================
@@ -788,9 +825,9 @@ async function submitOrder(event) {
       email:        form.querySelector('#f-email').value.trim(),
       address:      state.shippingPoint.address,
       addressExtra: '',
-      city:         state.shippingPoint.city,
-      county:       state.shippingPoint.county,
-      postalCode:   state.shippingPoint.postalCode,
+      city:         '',
+      county:       document.getElementById('f-locker-county').value,
+      postalCode:   '',
       notes:        form.querySelector('#f-notes').value.trim(),
     };
   } else {
@@ -825,7 +862,9 @@ async function submitOrder(event) {
     customer,
     deliveryType:    state.deliveryType,
     shippingPoint:   state.shippingPoint,
-    serviceId:       state.selectedCourier?.serviceId       || null,
+    serviceId:       state.deliveryType === 'home'
+                       ? (state.selectedCourier?.serviceId || null)
+                       : (state.shippingPoint?.serviceId   || null),
     shippingPointId: state.shippingPoint?.id                || null,
     deliveryPrice:   getDeliveryPrice(),
     grandTotal:      getGrandTotal(),
@@ -995,6 +1034,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (numberInput) {
     numberInput.addEventListener('blur', () => maybeFetchPrice());
   }
+
+  document.getElementById('locker-search')?.addEventListener('input', (e) => {
+    state.lockerSearch = e.target.value;
+    clearTimeout(window.__lockerDebounce);
+    window.__lockerDebounce = setTimeout(renderLockerList, 150);
+  });
 });
   const numberInput = document.getElementById('f-number');
 if (numberInput) {

@@ -795,11 +795,11 @@
 
       <!-- EASYBOX fields -->
       <div id="easybox-fields" hidden>
+        <p class="easybox-info">
+          Selectează județul, apoi alege un punct de ridicare.
+          Coletul va fi disponibil pentru ridicare 24/7.
+        </p>
         <div class="form-group">
-          <p class="easybox-info">
-            Selectează județul, apoi alege un locker din listă.
-            Coletul va fi disponibil pentru ridicare 24/7.
-          </p>
           <label for="f-locker-county">Județ *</label>
           <select id="f-locker-county" onchange="fetchLockers(this.value)">
             <option value="">— Selectează județul —</option>
@@ -819,13 +819,13 @@
             <option>Vaslui</option><option>Vâlcea</option><option>Vrancea</option>
           </select>
         </div>
-        <div id="locker-loading" hidden>
-          <p class="locker-loading-msg">⏳ Se încarcă lockerele...</p>
-        </div>
-        <div id="locker-list" class="locker-list"></div>
-        <div id="locker-display" hidden></div>
+        <div id="locker-loading" hidden><p>⏳ Se încarcă punctele...</p></div>
+        <div id="locker-chips" class="locker-chips"></div>
+        <input type="text" id="locker-search" class="locker-search"
+          placeholder="Caută după stradă, magazin sau zonă..." autocomplete="off">
+        <div id="locker-list" class="locker-list-box"></div>
         <div id="locker-error" class="form-error" hidden>
-          Te rugăm selectează un locker.
+          Te rugăm selectează un punct de ridicare.
         </div>
       </div>
  
