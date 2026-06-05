@@ -34,6 +34,8 @@ const OPERATOR_LABELS = {
   Cargus:     'Cargus',
 };
 
+const TEST_MODE = new URLSearchParams(location.search).has('test');
+
 /* ============================================================
    CART PERSISTENCE
    ============================================================ */
@@ -1040,6 +1042,10 @@ document.addEventListener('DOMContentLoaded', () => {
     clearTimeout(window.__lockerDebounce);
     window.__lockerDebounce = setTimeout(renderLockerList, 150);
   });
+
+  if (TEST_MODE) {
+    document.querySelectorAll('[data-test-product]').forEach(el => { el.hidden = false; });
+  }
 });
   const numberInput = document.getElementById('f-number');
 if (numberInput) {

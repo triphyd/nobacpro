@@ -371,6 +371,29 @@
         </div>
       </article>
 
+      <!-- TEST product — hidden by default, revealed only when ?test=1 -->
+      <article class="product-card" data-id="test_1" data-test-product hidden>
+        <div class="card-image-wrap">
+          <span class="card-badge" style="background:#dc2626">TEST</span>
+          <img src="/assets/product-1.png" alt="TEST Produs" loading="lazy">
+        </div>
+        <div class="card-body">
+          <span class="card-category">Test intern</span>
+          <h3 class="card-name">TEST — Produs 1 Leu</h3>
+          <p class="card-desc">Produs intern pentru testarea fluxului de checkout. Nu este vizibil clienților reali.</p>
+          <div class="card-pricing">
+            <span class="card-price">1,00 Lei</span>
+          </div>
+          <button class="btn btn-primary btn-block add-to-cart"
+            data-id="test_1"
+            data-name="TEST — Produs 1 Leu"
+            data-price="100"
+            onclick="addToCart(this)">
+            Adaugă în coș
+          </button>
+        </div>
+      </article>
+
     </div>
 
     <div class="discount-strip">
@@ -922,7 +945,7 @@
           <svg class="accordion-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><polyline points="5 8 10 13 15 8"/></svg>
         </button>
         <div class="accordion-panel" hidden>
-          <p>Livrăm prin Colete Online în 1–3 zile lucrătoare în toată România. Vei primi un SMS cu numărul AWB imediat după procesarea comenzii.</p>
+          <p>Livrăm prin Colete Online în 1–3 zile lucrătoare în toată România. Vei primi un email cu numărul AWB imediat după procesarea comenzii.</p>
         </div>
       </div>
 
