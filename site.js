@@ -644,10 +644,11 @@ async function maybeFetchPrice() {
     const resp = await fetch(`${WORKER_DELIVERY_URL}/?${params}`);
     const data = await resp.json();
 
-    if (data && data.price !== undefined) {
-      state.selectedCourier = data;
-      renderSingleCourier(data);
+    if (Array.isArray(data) && data.length > 0) {
+      renderCourierList(data);
     } else {
+      state.selectedCourier = null;
+      renderModalSummary();
       renderCourierError();
     }
   } catch (e) {
@@ -657,15 +658,29 @@ async function maybeFetchPrice() {
   }
 }
 
-function renderSingleCourier(c) {
+function renderCourierList(couriers) {
   const list = document.getElementById('courier-list');
-  list.innerHTML = `
-    <div class="courier-option selected">
+  list.innerHTML = couriers.map((c, i) => {
+    const priceLabel = c.price === 0 ? 'Gratuit' : formatPrice(c.price);
+    const dataAttr   = escHtml(JSON.stringify(c));
+    return `<button type="button" class="courier-option${i === 0 ? ' selected' : ''}"
+      data-courier="${dataAttr}" onclick="selectCourier(this)">
       <span class="courier-name">${escHtml(c.courierName)}</span>
       <span class="courier-details">${escHtml(c.estimatedDelivery || '1–3 zile')}</span>
-      <span class="courier-price">${c.price === 0 ? 'Gratuit' : formatPrice(c.price)}</span>
-    </div>
-  `;
+      <span class="courier-price">${priceLabel}</span>
+    </button>`;
+  }).join('');
+  state.selectedCourier = couriers[0];
+  renderModalSummary();
+}
+
+function selectCourier(btn) {
+  const c = JSON.parse(btn.dataset.courier);
+  state.selectedCourier = c;
+  document.querySelectorAll('.courier-option').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const err = document.getElementById('courier-error');
+  if (err) err.hidden = true;
   renderModalSummary();
 }
 
