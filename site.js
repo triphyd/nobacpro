@@ -736,7 +736,9 @@ function validateForm() {
   const required = form.querySelectorAll('[required]');
   let valid = true;
 
+  const homeOnlyFields = new Set(['f-county', 'f-number']);
   required.forEach(field => {
+    if (state.deliveryType === 'easybox' && homeOnlyFields.has(field.id)) return;
     field.classList.remove('invalid');
     const val = field.type === 'checkbox' ? field.checked : field.value.trim();
     if (!val) {
@@ -788,6 +790,11 @@ function validateForm() {
   // Locker: require shipping point selection
   if (state.deliveryType === 'easybox' && !state.shippingPoint) {
     document.getElementById('locker-error').hidden = false;
+    const errorEl = document.getElementById('form-error');
+    if (errorEl) {
+      errorEl.textContent = 'Te rugăm selectează un punct de livrare (easybox/locker).';
+      errorEl.hidden = false;
+    }
     valid = false;
   } else {
     const le = document.getElementById('locker-error');
