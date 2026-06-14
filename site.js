@@ -1054,11 +1054,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-test-product]').forEach(el => { el.hidden = false; });
   }
 });
-  const numberInput = document.getElementById('f-number');
-if (numberInput) {
-  numberInput.addEventListener('blur', () => {
-    if (state.deliveryType === 'home' && state.postalCode && state.street) {
-      maybeFetchPrice();
-    }
-  });
-}
+
