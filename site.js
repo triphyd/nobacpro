@@ -135,7 +135,6 @@ function formatPrice(bani) {
 }
 
 function getDeliveryPrice() {
-  if (getSubtotal() >= 15000) return 0;
   if (state.deliveryType === 'home') {
     return state.selectedCourier?.price || 0;
   }
@@ -227,15 +226,8 @@ function renderDrawerItems() {
     totalFinalWrap.hidden = true;
   }
 
-  const total = getTotal();
-  if (total >= 15000) {
-    shippingEl.textContent = '✓ Livrare gratuită inclusă';
-    shippingEl.className = 'drawer-shipping free';
-  } else {
-    const needed = formatPrice(15000 - total);
-    shippingEl.textContent = `Livrare GRATUITĂ la comenzi peste 150 Lei (mai ai ${needed})`;
-    shippingEl.className = 'drawer-shipping';
-  }
+  shippingEl.textContent = 'Livrarea se calculează la finalizarea comenzii.';
+  shippingEl.className = 'drawer-shipping';
 }
 
 /* ============================================================
@@ -313,8 +305,6 @@ function renderModalSummary() {
       <span>Livrare (${deliveryLabel})</span>
       <span>${formatPrice(getDeliveryPrice())}</span>
     </div>`;
-  } else if (state.deliveryType !== 'home' || state.selectedCourier || state.shippingPoint) {
-    html += `<div class="summary-item"><span>Livrare</span><span>Gratuit</span></div>`;
   }
   html += `<div class="summary-total"><span>Total de plată</span><span>${formatPrice(getGrandTotal())}</span></div>`;
   el.innerHTML = html;
