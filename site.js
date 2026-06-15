@@ -719,6 +719,16 @@ function renderCourierError() {
 }
 
 /* ============================================================
+   HELPERS
+   ============================================================ */
+function deriveOperatorFromName(name) {
+  const n = (name || '').toLowerCase();
+  if (n.includes('sameday')) return 'Sameday';
+  if (n.includes('fan'))     return 'FanCourier';
+  return null;
+}
+
+/* ============================================================
    FORM VALIDATION
    ============================================================ */
 function validateForm() {
@@ -865,6 +875,12 @@ async function submitOrder(event) {
                        ? (state.selectedCourier?.serviceId || null)
                        : (state.shippingPoint?.serviceId   || null),
     shippingPointId: state.shippingPoint?.id                || null,
+    courierName:     state.deliveryType === 'home'
+                       ? (state.selectedCourier?.courierName || null)
+                       : (state.shippingPoint?.operator || null),
+    operator:        state.deliveryType === 'home'
+                       ? deriveOperatorFromName(state.selectedCourier?.courierName)
+                       : (state.shippingPoint?.operator || null),
     deliveryPrice:   getDeliveryPrice(),
     grandTotal:      getGrandTotal(),
   };
@@ -1039,6 +1055,20 @@ document.addEventListener('DOMContentLoaded', () => {
     clearTimeout(window.__lockerDebounce);
     window.__lockerDebounce = setTimeout(renderLockerList, 150);
   });
+
+  // Live-clear invalid state as the user corrects fields
+  document.getElementById('checkout-form')
+    ?.querySelectorAll('input, select, textarea')
+    .forEach(el => {
+      const clear = () => {
+        const val = el.type === 'checkbox' ? el.checked : (el.value || '').trim();
+        if (val) el.classList.remove('invalid');
+        const err = document.getElementById('form-error');
+        if (err) err.hidden = true;
+      };
+      el.addEventListener('input', clear);
+      el.addEventListener('change', clear);
+    });
 
   if (TEST_MODE) {
     document.querySelectorAll('[data-test-product]').forEach(el => { el.hidden = false; });
