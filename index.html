@@ -14,7 +14,7 @@
   <link rel="icon" type="image/avif" href="/assets/Nobacpro_logo.avif">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="site.css">
 
   <script type="application/ld+json">
@@ -85,9 +85,9 @@
     <!-- Right: cart + hamburger -->
     <div class="nav-right">
       <button class="cart-btn" id="cart-btn" aria-label="Coșul tău" onclick="openDrawer()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6.3 7.5h11.4a1.5 1.5 0 0 1 1.49 1.68l-1.06 8.5A2 2 0 0 1 16.14 19.5H7.86a2 2 0 0 1-1.99-1.82L4.81 9.18A1.5 1.5 0 0 1 6.3 7.5z"/>
+          <path d="M9 10V6.5a3 3 0 0 1 6 0V10"/>
         </svg>
         <span class="cart-badge" id="cart-badge" hidden>0</span>
       </button>
@@ -112,7 +112,9 @@
 <!-- Welcome banner -->
 <div id="welcome-banner" class="welcome-banner" role="banner">
   <span class="welcome-text">Bun venit! Suntem distribuitorii oficiali NOBACPRO în România.</span>
-  <button class="welcome-close" onclick="dismissWelcome()" aria-label="Închide">✕</button>
+  <button class="welcome-close" onclick="dismissWelcome()" aria-label="Închide">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg>
+  </button>
 </div>
 
 <!-- ============================================================
@@ -129,9 +131,9 @@
     <div class="hero-left">
       <p class="official-inline">Distribuitor oficial NOBACPRO în România</p>
       <div class="hero-badge">
-        <span>✓ Ecologic</span>
-        <span>✓ Biodegradabil</span>
-        <span>✓ Fără plastic</span>
+        <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12.5 9.5 18 20 6.5"/></svg>Ecologic</span>
+        <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12.5 9.5 18 20 6.5"/></svg>Biodegradabil</span>
+        <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12.5 9.5 18 20 6.5"/></svg>Fără plastic</span>
       </div>
       <h1 class="hero-title">40 de spălări.<br>Un carton cât palma.</h1>
       <p class="hero-sub">Fără sticlă de plastic. Fără risipă. Fără complicații. O foaie concentrată – o spălare completă.</p>
@@ -139,10 +141,19 @@
         <a href="#produse" class="btn btn-primary">Comandă acum</a>
         <a href="#cum-functioneaza" class="btn btn-outline-white">Cum funcționează →</a>
       </div>
-      <p class="hero-rating">⭐⭐⭐⭐⭐<span class="hero-sep">|</span>Certificat OECD-301B</p>
+      <p class="hero-rating">
+        <span class="hero-stars" aria-label="5 stele din 5">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8-6.1-3.4-6.1 3.4 1.4-6.8L2.2 9.1l6.9-.8L12 2z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8-6.1-3.4-6.1 3.4 1.4-6.8L2.2 9.1l6.9-.8L12 2z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8-6.1-3.4-6.1 3.4 1.4-6.8L2.2 9.1l6.9-.8L12 2z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8-6.1-3.4-6.1 3.4 1.4-6.8L2.2 9.1l6.9-.8L12 2z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8-6.1-3.4-6.1 3.4 1.4-6.8L2.2 9.1l6.9-.8L12 2z"/></svg>
+        </span>
+        <span class="hero-sep">|</span>Certificat OECD-301B
+      </p>
     </div>
     <div class="hero-right" aria-hidden="true">
-      <img src="/assets/product-1.png" alt="Produs NOBACPRO" width="380" height="380" loading="eager">
+      <img src="/assets/product-1-transparent.webp" alt="Produs NOBACPRO" width="451" height="760" loading="eager">
     </div>
   </div>
 </section>
@@ -153,11 +164,12 @@
 <section class="benefits-strip" id="beneficii">
   <div class="container benefits-grid">
     <div class="benefit-col">
-      <div class="benefit-icon">
-        <!-- Plastic bottle with X -->
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M15 4 H25 V8 L28 12 V34 Q28 36 26 36 H14 Q12 36 12 34 V12 L15 8 Z"/>
-          <line x1="16" y1="20" x2="24" y2="28"/><line x1="24" y1="20" x2="16" y2="28"/>
+      <div class="benefit-icon icon-circle">
+        <!-- Recycled package / leaf -->
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 22c-4.5 0-8-3.6-8-8.5C4 7 9 3.5 12 2c3 1.5 8 5 8 11.5 0 4.9-3.5 8.5-8 8.5z"/>
+          <path d="M12 22c0-6 0-9 4.5-13.5"/>
+          <path d="M12 13.5C10 12 8.5 11 7 11"/>
         </svg>
       </div>
       <div class="benefit-stat">0% Plastic</div>
@@ -165,11 +177,11 @@
     </div>
     <div class="benefit-divider" aria-hidden="true"></div>
     <div class="benefit-col">
-      <div class="benefit-icon">
-        <!-- Water drop with X -->
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M20 6 Q28 16 28 24 A8 8 0 0 1 12 24 Q12 16 20 6Z"/>
-          <line x1="15" y1="19" x2="25" y2="29"/><line x1="25" y1="19" x2="15" y2="29"/>
+      <div class="benefit-icon icon-circle">
+        <!-- Water drop, crossed out -->
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3.5c3.2 3.9 6 7.5 6 10.7a6 6 0 0 1-12 0c0-3.2 2.8-6.8 6-10.7z"/>
+          <line x1="4.5" y1="4.5" x2="19.5" y2="19.5"/>
         </svg>
       </div>
       <div class="benefit-stat">0% Apă</div>
@@ -177,11 +189,12 @@
     </div>
     <div class="benefit-divider" aria-hidden="true"></div>
     <div class="benefit-col">
-      <div class="benefit-icon">
-        <!-- Sheet rectangle -->
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="8" y="14" width="24" height="14" rx="3"/>
-          <line x1="12" y1="19" x2="28" y2="19"/><line x1="12" y1="23" x2="22" y2="23"/>
+      <div class="benefit-icon icon-circle">
+        <!-- Detergent sheet, dissolving -->
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 4h10.5L20 8.5V20a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 20V5a1 1 0 0 1 1-1z"/>
+          <path d="M15 4v5h5"/>
+          <line x1="8" y1="13" x2="13" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/>
         </svg>
       </div>
       <div class="benefit-stat">1 foaie = 1 spălare</div>
@@ -248,8 +261,8 @@
       <!-- Card 1 -->
       <article class="product-card" data-id="prod_1">
         <div class="card-image-wrap">
-          <span class="card-badge" style="background:var(--blue)">40 spălări</span>
-          <img src="/assets/product-1.png" alt="Detergent Ecologic NOBACPRO Fără Parfum" loading="lazy">
+          <span class="card-badge badge-washes">40 spălări</span>
+          <img src="/assets/product-1-transparent.webp" alt="Detergent Ecologic NOBACPRO Fără Parfum" loading="lazy">
         </div>
         <div class="card-body">
           <span class="card-category">Detergent rufe</span>
@@ -280,7 +293,7 @@
       <article class="product-card card-popular" data-id="prod_2">
         <div class="card-popular-tag">Cel mai popular</div>
         <div class="card-image-wrap">
-          <span class="card-badge" style="background:var(--blue)">40 spălări</span>
+          <span class="card-badge badge-washes">40 spălări</span>
           <img src="/assets/product-2.avif" alt="Detergent Ecologic NOBACPRO Fresh Linen" loading="lazy">
         </div>
         <div class="card-body">
@@ -311,7 +324,7 @@
       <!-- Card 3 -->
       <article class="product-card" data-id="prod_3">
         <div class="card-image-wrap">
-          <span class="card-badge" style="background:var(--blue)">30 spălări</span>
+          <span class="card-badge badge-washes">30 spălări</span>
           <img src="/assets/product-3.avif" alt="Perle Parfumate NOBACPRO Clean Cotton" loading="lazy">
         </div>
         <div class="card-body">
@@ -342,7 +355,7 @@
       <!-- Card 4 -->
       <article class="product-card" data-id="prod_4">
         <div class="card-image-wrap">
-          <span class="card-badge" style="background:var(--blue)">30 spălări</span>
+          <span class="card-badge badge-washes">30 spălări</span>
           <span class="card-badge stock-badge">Stoc limitat</span>
           <img src="/assets/product-4.webp" alt="Perle Parfumate NOBACPRO Floral" loading="lazy">
         </div>
@@ -374,8 +387,8 @@
       <!-- Card 5 — TODO: replace /assets/product-3.avif with perle-lavanda.jpg when uncle provides photo -->
       <article class="product-card" data-id="prod_5">
         <div class="card-image-wrap">
-          <span class="card-badge" style="background:var(--blue)">30 spălări</span>
-          <span class="card-badge" style="background:#dc2626; left:auto; right:12px">NOU!</span>
+          <span class="card-badge badge-washes">30 spălări</span>
+          <span class="card-badge badge-new">NOU!</span>
           <img src="/assets/product-5.webp" alt="Perle Parfumate NOBACPRO Lavandă" loading="lazy">
         </div>
         <div class="card-body">
@@ -406,8 +419,8 @@
       <!-- Card 6 — TODO: replace /assets/product-3.avif with perle-padure.jpg when uncle provides photo -->
       <article class="product-card" data-id="prod_6">
         <div class="card-image-wrap">
-          <span class="card-badge" style="background:var(--blue)">30 spălări</span>
-          <span class="card-badge" style="background:#dc2626; left:auto; right:12px">NOU!</span>
+          <span class="card-badge badge-washes">30 spălări</span>
+          <span class="card-badge badge-new">NOU!</span>
           <img src="/assets/product-6.webp" alt="Perle Parfumate NOBACPRO Pădure" loading="lazy">
         </div>
         <div class="card-body">
@@ -439,8 +452,8 @@
       <!-- TODO: confirm price (44,99 Lei) with uncle before launch -->
       <article class="product-card" data-id="prod_7">
         <div class="card-image-wrap">
-          <span class="card-badge" style="background:var(--blue)">30 spălări</span>
-          <span class="card-badge" style="background:#dc2626; left:auto; right:12px">NOU!</span>
+          <span class="card-badge badge-washes">30 spălări</span>
+          <span class="card-badge badge-new">NOU!</span>
           <img src="/assets/product-7.webp" alt="Benzi Detergent Vase NOBACPRO" loading="lazy">
         </div>
         <div class="card-body">
@@ -470,8 +483,8 @@
       <!-- TEST product — hidden by default, revealed only when ?test=1 -->
       <article class="product-card" data-id="test_1" data-test-product hidden>
         <div class="card-image-wrap">
-          <span class="card-badge" style="background:#dc2626">TEST</span>
-          <img src="/assets/product-1.png" alt="TEST Produs" loading="lazy">
+          <span class="card-badge badge-test">TEST</span>
+          <img src="/assets/product-1-transparent.webp" alt="TEST Produs" loading="lazy">
         </div>
         <div class="card-body">
           <span class="card-category">Test intern</span>
@@ -495,7 +508,10 @@
     <div class="discount-strip">
       <div class="discount-strip-inner">
         <span class="discount-strip-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3.5 10.6V4.5a1 1 0 0 1 1-1h6.1a2 2 0 0 1 1.42.59l8.39 8.39a2 2 0 0 1 0 2.83l-6.1 6.1a2 2 0 0 1-2.83 0l-8.39-8.39a2 2 0 0 1-.59-1.42z"/>
+            <circle cx="8.5" cy="8.5" r="1.6"/>
+          </svg>
         </span>
         <span class="discount-strip-text">
           <strong>Reducere automată la produse individuale:</strong>
@@ -711,12 +727,13 @@
   <div class="container trust-grid">
 
     <div class="trust-col">
-      <div class="trust-icon">
+      <div class="trust-icon icon-circle">
         <!-- Delivery truck -->
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="1" y="8" width="20" height="16" rx="2"/>
-          <path d="M21 13h5l4 6v5H21V13z"/>
-          <circle cx="8" cy="27" r="2.5"/><circle cx="27" cy="27" r="2.5"/>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2.5 6.5h11a1 1 0 0 1 1 1V16h-12a1 1 0 0 1-1-1V7.5a1 1 0 0 1 1-1z"/>
+          <path d="M14.5 9.5h3.4a1 1 0 0 1 .83.44l2.6 3.9a1 1 0 0 1 .17.55V15a1 1 0 0 1-1 1h-2"/>
+          <circle cx="7" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/>
+          <line x1="8.8" y1="16" x2="14.7" y2="16"/>
         </svg>
       </div>
       <h3 class="trust-title">Livrare în 1–3 zile</h3>
@@ -724,12 +741,11 @@
     </div>
 
     <div class="trust-col">
-      <div class="trust-icon">
-        <!-- Shield with lock -->
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M18 3 L32 9 V20 Q32 30 18 34 Q4 30 4 20 V9 Z"/>
-          <rect x="14" y="16" width="8" height="7" rx="1"/>
-          <path d="M15 16 v-2 a3 3 0 0 1 6 0 v2"/>
+      <div class="trust-icon icon-circle">
+        <!-- Shield with check -->
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2.5l7.5 3v6c0 5-3.2 8.3-7.5 10-4.3-1.7-7.5-5-7.5-10v-6l7.5-3z"/>
+          <polyline points="8.5 12 11 14.5 15.5 9.5"/>
         </svg>
       </div>
       <h3 class="trust-title">Plată 100% securizată</h3>
@@ -737,11 +753,11 @@
     </div>
 
     <div class="trust-col">
-      <div class="trust-icon">
+      <div class="trust-icon icon-circle">
         <!-- Return arrow -->
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M12 8 L6 14 L12 20"/>
-          <path d="M6 14 H24 A6 6 0 0 1 24 26 H16"/>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8.5 5 L4 9.5 L8.5 14"/>
+          <path d="M4 9.5 H15.5 A4.5 4.5 0 0 1 15.5 18.5 H10"/>
         </svg>
       </div>
       <h3 class="trust-title">Retur în 14 zile</h3>
@@ -833,10 +849,12 @@
         <label>Metoda de livrare *</label>
         <div class="delivery-toggle">
           <button type="button" id="delivery-home-btn" class="delivery-btn active" onclick="setDeliveryType('home')">
-            🏠 Acasă (curier)
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M5.5 9v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V9"/><path d="M10 20v-6h4v6"/></svg>
+            Acasă (curier)
           </button>
           <button type="button" id="delivery-easybox-btn" class="delivery-btn" onclick="setDeliveryType('easybox')">
-            📦 Ridicare din punct
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.8 20 7v10l-8 4.2L4 17V7l8-4.2z"/><path d="M4.3 7.2 12 11.3l7.7-4.1"/><line x1="12" y1="11.3" x2="12" y2="21"/></svg>
+            Ridicare din punct
           </button>
         </div>
       </div>
@@ -903,7 +921,7 @@
         <div class="form-group">
           <label>Metodă de livrare *</label>
           <div id="courier-loading" hidden>
-            <p class="courier-loading-msg">⏳ Se calculează prețurile...</p>
+            <p class="courier-loading-msg"><span class="spinner spinner-dark"></span> Se calculează prețurile...</p>
           </div>
           <div id="courier-list" class="courier-list"></div>
           <div id="courier-error" class="form-error" hidden>
@@ -938,7 +956,7 @@
             <option>Vaslui</option><option>Vâlcea</option><option>Vrancea</option>
           </select>
         </div>
-        <div id="locker-loading" hidden><p>⏳ Se încarcă punctele...</p></div>
+        <div id="locker-loading" hidden><p class="locker-loading-msg"><span class="spinner spinner-dark"></span> Se încarcă punctele...</p></div>
         <div id="locker-chips" class="locker-chips"></div>
         <input type="text" id="locker-search" class="locker-search"
           placeholder="Caută după stradă, magazin sau zonă..." autocomplete="off">
@@ -985,12 +1003,12 @@
     </div>
     <div class="about-right">
       <ul class="about-features">
-        <li><span class="check-icon">✓</span> Certificat OECD-301B biodegradabil</li>
-        <li><span class="check-icon">✓</span> Fără SLS, SLES, fosfați</li>
-        <li><span class="check-icon">✓</span> Eficient la 30–90°C</li>
-        <li><span class="check-icon">✓</span> Compatibil cu toate mașinile de spălat</li>
-        <li><span class="check-icon">✓</span> Testat dermatologic</li>
-        <li><span class="check-icon">✓</span> Ambalaj carton kraft reciclabil</li>
+        <li><span class="check-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12.5 9.5 18 20 6.5"/></svg></span> Certificat OECD-301B biodegradabil</li>
+        <li><span class="check-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12.5 9.5 18 20 6.5"/></svg></span> Fără SLS, SLES, fosfați</li>
+        <li><span class="check-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12.5 9.5 18 20 6.5"/></svg></span> Eficient la 30–90°C</li>
+        <li><span class="check-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12.5 9.5 18 20 6.5"/></svg></span> Compatibil cu toate mașinile de spălat</li>
+        <li><span class="check-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12.5 9.5 18 20 6.5"/></svg></span> Testat dermatologic</li>
+        <li><span class="check-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12.5 9.5 18 20 6.5"/></svg></span> Ambalaj carton kraft reciclabil</li>
       </ul>
     </div>
   </div>
@@ -1080,19 +1098,19 @@
       <p class="footer-tagline">Produse ecologice livrate rapid în toată România.</p>
       <div class="footer-social">
         <a href="https://www.instagram.com/nobacpro/" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="white"/></svg>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.2"/><circle cx="12" cy="12" r="4.3"/><circle cx="17.4" cy="6.6" r="1.15" fill="currentColor" stroke="none"/></svg>
         </a>
         <a href="https://www.facebook.com/nobacpro/" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21.9v-8h2.7l.5-3.4h-3.2V8.3c0-.99.32-1.86 1.87-1.86h1.45V3.4c-.25-.03-1.11-.11-2.12-.11-2.1 0-3.54 1.28-3.54 3.63v2.57H8.4v3.4h2.66v8a10 10 0 0 0 2.44 0z"/></svg>
         </a>
         <a href="https://www.tiktok.com/@nobacpro" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
         </a>
         <a href="https://www.youtube.com/@nobacpro" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="4"/><polygon points="10,8 16,12 10,16"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.12-2.13C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.52A3 3 0 0 0 .5 6.2 31.3 31.3 0 0 0 0 12a31.3 31.3 0 0 0 .5 5.8 3 3 0 0 0 2.12 2.13c1.88.52 9.38.52 9.38.52s7.5 0 9.38-.52a3 3 0 0 0 2.12-2.13A31.3 31.3 0 0 0 24 12a31.3 31.3 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12l-6.2 3.6z"/></svg>
         </a>
         <a href="https://wa.me/40773835120" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.115.553 4.103 1.523 5.83L.057 23.5l5.83-1.465A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.814 0-3.52-.49-4.995-1.345l-.357-.212-3.72.936.995-3.62-.232-.374A9.96 9.96 0 0 1 2 12C2 6.478 6.478 2 12 2s10 4.478 10 10-4.478 10-10 10z"/></svg>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.115.553 4.103 1.523 5.83L.057 23.5l5.83-1.465A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.814 0-3.52-.49-4.995-1.345l-.357-.212-3.72.936.995-3.62-.232-.374A9.96 9.96 0 0 1 2 12C2 6.478 6.478 2 12 2s10 4.478 10 10-4.478 10-10 10z"/></svg>
         </a>
       </div>
     </div>
@@ -1131,10 +1149,8 @@
   <div class="footer-bottom">
     <p>© 2026 detergenti-eco.ro · Toate drepturile rezervate</p>
     <div class="stripe-badge">
-      Plăți securizate prin
-      <svg width="48" height="20" viewBox="0 0 60 25" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Stripe" role="img">
-        <text x="0" y="18" font-family="Inter,sans-serif" font-weight="700" font-size="18" fill="white" letter-spacing="-0.5">stripe</text>
-      </svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+      Plăți securizate prin <strong>Stripe</strong>
     </div>
     <div class="footer-legal">
       <p>S.C. HORVES S.R.L. · CUI: 49589171 · Nr. Reg. Com.: J2024000435059 · Sediu: Otomani, nr. 32, jud. Bihor, 417446, România</p>

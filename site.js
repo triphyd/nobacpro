@@ -36,6 +36,21 @@ const OPERATOR_LABELS = {
 
 const TEST_MODE = new URLSearchParams(location.search).has('test');
 
+/* Product thumbnails shown in the cart drawer */
+const PRODUCT_IMAGES = {
+  prod_1:   '/assets/product-1-transparent.webp',
+  prod_2:   '/assets/product-2.avif',
+  prod_3:   '/assets/product-3.avif',
+  prod_4:   '/assets/product-4.webp',
+  prod_5:   '/assets/product-5.webp',
+  prod_6:   '/assets/product-6.webp',
+  prod_7:   '/assets/product-7.webp',
+  bundle_1: '/assets/bundle-1.webp',
+  bundle_2: '/assets/bundle-2.webp',
+  bundle_3: '/assets/bundle-3.webp',
+  test_1:   '/assets/product-1-transparent.webp',
+};
+
 /* ============================================================
    CART PERSISTENCE
    ============================================================ */
@@ -152,8 +167,14 @@ function updateCartUI() {
   const count = getCartItemCount();
   const badge = document.getElementById('cart-badge');
   if (count > 0) {
+    const changed = badge.textContent !== String(count) || badge.hidden;
     badge.textContent = count;
     badge.hidden = false;
+    if (changed) {
+      badge.classList.remove('pop');
+      void badge.offsetWidth; // restart the animation
+      badge.classList.add('pop');
+    }
   } else {
     badge.hidden = true;
   }
@@ -185,10 +206,12 @@ function renderDrawerItems() {
     row.className = 'drawer-item';
     row.innerHTML = `
       <div class="drawer-item-img">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect width="40" height="40" rx="6" fill="#EBF3FF"/>
-          <rect x="10" y="12" width="20" height="16" rx="3" fill="#1A56DB" opacity="0.5"/>
-        </svg>
+        ${PRODUCT_IMAGES[item.id]
+          ? `<img src="${PRODUCT_IMAGES[item.id]}" alt="" loading="lazy">`
+          : `<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect width="40" height="40" rx="6" fill="#FAF7F1"/>
+              <rect x="10" y="12" width="20" height="16" rx="3" fill="#1A56DB" opacity="0.4"/>
+            </svg>`}
       </div>
       <div class="drawer-item-info">
         <div class="drawer-item-name" title="${escHtml(item.name)}">${escHtml(item.name)}</div>
@@ -587,7 +610,8 @@ function updatePostalDisplay() {
   if (!el) return;
   if (state.postalCode) {
     el.innerHTML = `<div class="postal-detected">
-      📍 Cod poștal detectat: <strong>${escHtml(state.postalCode)}</strong>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21.5c4-4.2 7-7.9 7-11.3a7 7 0 1 0-14 0c0 3.4 3 7.1 7 11.3z"/><circle cx="12" cy="10" r="2.6"/></svg>
+      Cod poștal detectat: <strong>${escHtml(state.postalCode)}</strong>
     </div>`;
   } else {
     el.innerHTML = '';
@@ -1011,6 +1035,53 @@ function toggleMobileMenu() {
 }
 
 /* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+function initScrollReveal() {
+  if (!('IntersectionObserver' in window)) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const groups = [
+    '.benefit-col',
+    '.hiw-step',
+    '.product-card',
+    '.bundle-card',
+    '.review-card',
+    '.trust-col',
+    '.accordion-item',
+  ];
+  const singles = [
+    '.section-title', '.section-sub', '.section-label',
+    '.hiw-image-panel', '.table-wrap', '.discount-strip',
+    '.about-left', '.about-right',
+  ];
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+
+  groups.forEach(sel => {
+    document.querySelectorAll(sel).forEach((el, i) => {
+      el.classList.add('reveal');
+      el.style.transitionDelay = `${Math.min(i % 4, 3) * 70}ms`;
+      observer.observe(el);
+    });
+  });
+
+  singles.forEach(sel => {
+    document.querySelectorAll(sel).forEach(el => {
+      el.classList.add('reveal');
+      observer.observe(el);
+    });
+  });
+}
+
+/* ============================================================
    KEYBOARD TRAP
    ============================================================ */
 document.addEventListener('keydown', e => {
@@ -1042,6 +1113,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccordion();
   initSmoothScroll();
   initNavScroll();
+  initScrollReveal();
   initCityAutocomplete();
   initStreetAutocomplete();
 
