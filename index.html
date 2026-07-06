@@ -97,17 +97,19 @@
     </div>
   </div>
 
-  <!-- Mobile overlay nav -->
-  <div class="mobile-nav" id="mobile-nav" aria-hidden="true">
-    <ul>
-      <li><a href="#produse" onclick="toggleMobileMenu()">Produse</a></li>
-      <li><a href="#pachete" onclick="toggleMobileMenu()">Pachete</a></li>
-      <li><a href="#cum-functioneaza" onclick="toggleMobileMenu()">Cum funcționează</a></li>
-      <li><a href="#despre" onclick="toggleMobileMenu()">Despre</a></li>
-      <li><a href="#contact" onclick="toggleMobileMenu()">Contact</a></li>
-    </ul>
-  </div>
 </nav>
+
+<!-- Mobile overlay nav — outside .navbar because its backdrop-filter
+     would trap this fixed overlay inside the navbar's box -->
+<div class="mobile-nav" id="mobile-nav" aria-hidden="true">
+  <ul>
+    <li><a href="#produse" onclick="toggleMobileMenu()">Produse</a></li>
+    <li><a href="#pachete" onclick="toggleMobileMenu()">Pachete</a></li>
+    <li><a href="#cum-functioneaza" onclick="toggleMobileMenu()">Cum funcționează</a></li>
+    <li><a href="#despre" onclick="toggleMobileMenu()">Despre</a></li>
+    <li><a href="#contact" onclick="toggleMobileMenu()">Contact</a></li>
+  </ul>
+</div>
 
 <!-- Welcome banner -->
 <div id="welcome-banner" class="welcome-banner" role="banner">
@@ -136,6 +138,7 @@
         <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12.5 9.5 18 20 6.5"/></svg>Fără plastic</span>
       </div>
       <h1 class="hero-title">40 de spălări.<br>Un carton cât palma.</h1>
+      <img class="hero-product-mobile" src="/assets/product-2-transparent.webp" alt="" width="353" height="582" loading="eager" aria-hidden="true">
       <p class="hero-sub">Fără sticlă de plastic. Fără risipă. Fără complicații. O foaie concentrată – o spălare completă.</p>
       <div class="hero-buttons">
         <a href="#produse" class="btn btn-primary">Comandă acum</a>

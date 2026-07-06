@@ -621,19 +621,29 @@ input, select, textarea {
 }
 
 .hero-right {
-  display: flex;
+  display: none;
   flex: 1;
   justify-content: center;
-  width: 100%;
 }
 
 .hero-right svg,
 .hero-right img {
   filter: drop-shadow(0 18px 36px rgba(0,0,0,0.4));
   width: auto;
-  height: 240px;
+  height: 280px;
   object-fit: contain;
   display: block;
+}
+
+/* Product shot shown inline between headline and subtext on
+   small screens; .hero-right takes over from 1024px up */
+.hero-product-mobile {
+  display: block;
+  width: auto;
+  height: 190px;
+  object-fit: contain;
+  margin: 4px auto 24px;
+  filter: drop-shadow(0 14px 28px rgba(0,0,0,0.4));
 }
 
 /* On small screens each hero badge becomes its own chip instead of
@@ -2133,12 +2143,11 @@ input, select, textarea {
   }
 
   .hero-right {
-    width: auto;
+    display: flex;
   }
 
-  .hero-right svg,
-  .hero-right img {
-    height: 280px;
+  .hero-product-mobile {
+    display: none;
   }
 
   .product-grid {
