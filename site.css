@@ -858,7 +858,8 @@ input, select, textarea {
 
 .card-image-wrap {
   position: relative;
-  background: linear-gradient(180deg, var(--white) 0%, var(--paper) 100%);
+  /* pure white to match the white background baked into product photos */
+  background: var(--white);
   border-radius: var(--radius-card) var(--radius-card) 0 0;
   display: flex;
   align-items: center;
@@ -2286,7 +2287,7 @@ input, select, textarea {
   overflow: hidden;
   border-radius: 12px;
   margin-bottom: 16px;
-  background: var(--paper);
+  background: var(--white);
   border: 1px solid var(--line);
 }
 
